@@ -795,218 +795,263 @@
     </div>
 
     <script>
-        // Your existing JavaScript remains exactly the same
-        document.addEventListener('DOMContentLoaded', function() {
-            // Get DOM elements
-            const totalLecturesInput = document.getElementById('total-lectures');
-            const attendedLecturesInput = document.getElementById('attended-lectures');
-            const targetAttendanceSlider = document.getElementById('target-attendance');
-            const targetValueDisplay = document.getElementById('target-value');
-            const targetDisplay = document.getElementById('target-display');
-            const targetPercentageDisplay = document.getElementById('target-percentage');
-            const calculateBtn = document.getElementById('calculate-btn');
-            const percentageDisplay = document.getElementById('percentage');
-            const emojiContainer = document.getElementById('emoji-container');
-            const messageDisplay = document.getElementById('message');
-            const lectureCalcDisplay = document.getElementById('lecture-calc');
-            const resultContainer = document.getElementById('result-container');
-            const targetButtons = document.querySelectorAll('.target-btn');
-            
-            // Update target slider display
-            function updateTargetDisplay() {
-                const targetValue = targetAttendanceSlider.value;
-                targetValueDisplay.textContent = `${targetValue}%`;
-                targetDisplay.textContent = `Target: ${targetValue}%`;
-                targetPercentageDisplay.textContent = `${targetValue}%`;
-            }
-            
-            // Set up target slider
-            targetAttendanceSlider.addEventListener('input', updateTargetDisplay);
-            updateTargetDisplay(); // Initial display
-            
-            // Set up target buttons
-            targetButtons.forEach(button => {
-                button.addEventListener('click', function() {
-                    const targetValue = this.getAttribute('data-target');
-                    targetAttendanceSlider.value = targetValue;
-                    updateTargetDisplay();
-                    
-                    // Update active button
-                    targetButtons.forEach(btn => btn.classList.remove('active'));
-                    this.classList.add('active');
-                    
-                    // Animate the button
-                    this.style.transform = 'scale(0.95)';
-                    setTimeout(() => {
-                        this.style.transform = 'scale(1)';
-                    }, 200);
-                });
-            });
-            
-            // Function to calculate attendance percentage
-            function calculatePercentage(total, attended) {
-                if (total === 0) return 0;
-                return (attended / total) * 100;
-            }
-            
-            // Function to get emoji and message based on attendance vs target
-            function getReaction(percentage, target) {
-                let emoji, message;
+    document.addEventListener('DOMContentLoaded', function() {
+        // Get DOM elements
+        const totalLecturesInput = document.getElementById('total-lectures');
+        const attendedLecturesInput = document.getElementById('attended-lectures');
+        const targetAttendanceSlider = document.getElementById('target-attendance');
+        const targetValueDisplay = document.getElementById('target-value');
+        const targetDisplay = document.getElementById('target-display');
+        const targetPercentageDisplay = document.getElementById('target-percentage');
+        const calculateBtn = document.getElementById('calculate-btn');
+        const percentageDisplay = document.getElementById('percentage');
+        const emojiContainer = document.getElementById('emoji-container');
+        const messageDisplay = document.getElementById('message');
+        const lectureCalcDisplay = document.getElementById('lecture-calc');
+        const resultContainer = document.getElementById('result-container');
+        const targetButtons = document.querySelectorAll('.target-btn');
+        
+        // Track if button was clicked (vs auto-calculation)
+        let buttonClicked = false;
+        
+        // Update target slider display
+        function updateTargetDisplay() {
+            const targetValue = targetAttendanceSlider.value;
+            targetValueDisplay.textContent = `${targetValue}%`;
+            targetDisplay.textContent = `Target: ${targetValue}%`;
+            targetPercentageDisplay.textContent = `${targetValue}%`;
+        }
+        
+        // Set up target slider
+        targetAttendanceSlider.addEventListener('input', updateTargetDisplay);
+        updateTargetDisplay(); // Initial display
+        
+        // Set up target buttons
+        targetButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const targetValue = this.getAttribute('data-target');
+                targetAttendanceSlider.value = targetValue;
+                updateTargetDisplay();
                 
-                if (percentage === 0) {
-                    emoji = "😵";
-                    message = "Bro, do you even attend college?";
-                } else if (percentage < target - 20) {
-                    emoji = "😭";
-                    message = "You're way below target! Time to attend ALL lectures!";
-                } else if (percentage < target - 10) {
-                    emoji = "😰";
-                    message = "You're falling behind! Better start attending more!";
-                } else if (percentage < target) {
-                    emoji = "😟";
-                    message = "You're close but below target! Just a bit more effort!";
-                } else if (percentage < target + 5) {
-                    emoji = "🙂";
-                    message = "You're on target! Safe zone achieved!";
-                } else if (percentage < target + 15) {
-                    emoji = "😎";
-                    message = "Sigma grindset! You're above target!";
-                } else if (percentage < target + 25) {
-                    emoji = "🔥";
-                    message = "Absolute legend! Way above target!";
-                } else {
-                    emoji = "🏆";
-                    message = "PERFECT ATTENDANCE! You're crushing it!";
-                }
+                // Update active button
+                targetButtons.forEach(btn => btn.classList.remove('active'));
+                this.classList.add('active');
                 
-                return { emoji, message };
-            }
-            
-            // Function to calculate lectures to bunk or cover
-            function calculateLecturesNeeded(total, attended, target) {
-                const targetDecimal = target / 100;
-                
-                // If already at or above target: calculate how many can be bunked
-                if (attended / total >= targetDecimal) {
-                    // Solve for x: (attended) / (total + x) >= targetDecimal
-                    // x <= (attended / targetDecimal) - total
-                    const maxBunkable = Math.floor((attended / targetDecimal) - total);
-                    return {
-                        type: 'bunk',
-                        count: Math.max(0, maxBunkable)
-                    };
-                } 
-                // If below target: calculate how many need to be attended
-                else {
-                    // Solve for y: (attended + y) / (total + y) >= targetDecimal
-                    // y >= (targetDecimal * total - attended) / (1 - targetDecimal)
-                    const needed = Math.ceil((targetDecimal * total - attended) / (1 - targetDecimal));
-                    return {
-                        type: 'cover',
-                        count: Math.max(0, needed)
-                    };
-                }
-            }
-            
-            // Calculate button click event
-            calculateBtn.addEventListener('click', function() {
-                const totalLectures = parseInt(totalLecturesInput.value);
-                const attendedLectures = parseInt(attendedLecturesInput.value);
-                const target = parseInt(targetAttendanceSlider.value);
-                
-                // Validate inputs
-                if (isNaN(totalLectures) || isNaN(attendedLectures) || totalLectures < 0 || attendedLectures < 0) {
-                    percentageDisplay.textContent = "Error!";
-                    emojiContainer.textContent = "🤔";
-                    messageDisplay.textContent = "Please enter valid numbers!";
-                    lectureCalcDisplay.innerHTML = "";
-                    return;
-                }
-                
-                if (attendedLectures > totalLectures) {
-                    percentageDisplay.textContent = "Error!";
-                    emojiContainer.textContent = "🤨";
-                    messageDisplay.textContent = "You can't attend more lectures than conducted!";
-                    lectureCalcDisplay.innerHTML = "";
-                    return;
-                }
-                
-                if (totalLectures === 0) {
-                    percentageDisplay.textContent = "0%";
-                    emojiContainer.textContent = "😶";
-                    messageDisplay.textContent = "No lectures conducted yet!";
-                    lectureCalcDisplay.innerHTML = "";
-                    return;
-                }
-                
-                // Calculate percentage
-                const percentage = calculatePercentage(totalLectures, attendedLectures);
-                const formattedPercentage = percentage.toFixed(2);
-                
-                // Get reaction
-                const { emoji, message } = getReaction(percentage, target);
-                
-                // Calculate lectures to bunk or cover
-                const lectureCalc = calculateLecturesNeeded(totalLectures, attendedLectures, target);
-                
-                // Display results
-                percentageDisplay.textContent = `${formattedPercentage}%`;
-                emojiContainer.textContent = emoji;
-                messageDisplay.textContent = message;
-                
-                // Display lecture calculation
-                if (lectureCalc.type === 'bunk' && lectureCalc.count > 0) {
-                    lectureCalcDisplay.innerHTML = `🎉 You can bunk <span>${lectureCalc.count}</span> more lecture(s) and still maintain ${target}% attendance!`;
-                } else if (lectureCalc.type === 'bunk' && lectureCalc.count === 0) {
-                    lectureCalcDisplay.innerHTML = `⚠️ You're exactly at target! Don't bunk any more lectures or you'll fall below ${target}%!`;
-                } else if (lectureCalc.type === 'cover') {
-                    lectureCalcDisplay.innerHTML = `📚 You need to attend <span>${lectureCalc.count}</span> more lecture(s) to reach ${target}% attendance target!`;
-                }
-                
-                // Animate result container
-                resultContainer.style.transform = "scale(1.05)";
+                // Animate the button
+                this.style.transform = 'scale(0.95)';
                 setTimeout(() => {
-                    resultContainer.style.transform = "scale(1)";
-                }, 300);
-                
+                    this.style.transform = 'scale(1)';
+                }, 200);
+            });
+        });
+        
+        // Function to calculate attendance percentage
+        function calculatePercentage(total, attended) {
+            if (total === 0) return 0;
+            return (attended / total) * 100;
+        }
+        
+        // Function to get emoji and message based on attendance vs target
+        function getReaction(percentage, target) {
+            let emoji, message;
+            
+            if (percentage === 0) {
+                emoji = "😵";
+                message = "Bro, do you even attend college?";
+            } else if (percentage < target - 20) {
+                emoji = "😭";
+                message = "You're way below target! Time to attend ALL lectures!";
+            } else if (percentage < target - 10) {
+                emoji = "😰";
+                message = "You're falling behind! Better start attending more!";
+            } else if (percentage < target) {
+                emoji = "😟";
+                message = "You're close but below target! Just a bit more effort!";
+            } else if (percentage < target + 5) {
+                emoji = "🙂";
+                message = "You're on target! Safe zone achieved!";
+            } else if (percentage < target + 15) {
+                emoji = "😎";
+                message = "Sigma grindset! You're above target!";
+            } else if (percentage < target + 25) {
+                emoji = "🔥";
+                message = "Absolute legend! Way above target!";
+            } else {
+                emoji = "🏆";
+                message = "PERFECT ATTENDANCE! You're crushing it!";
+            }
+            
+            return { emoji, message };
+        }
+        
+        // Function to calculate lectures to bunk or cover
+        function calculateLecturesNeeded(total, attended, target) {
+            const targetDecimal = target / 100;
+            
+            // If already at or above target: calculate how many can be bunked
+            if (attended / total >= targetDecimal) {
+                // Solve for x: (attended) / (total + x) >= targetDecimal
+                // x <= (attended / targetDecimal) - total
+                const maxBunkable = Math.floor((attended / targetDecimal) - total);
+                return {
+                    type: 'bunk',
+                    count: Math.max(0, maxBunkable)
+                };
+            } 
+            // If below target: calculate how many need to be attended
+            else {
+                // Solve for y: (attended + y) / (total + y) >= targetDecimal
+                // y >= (targetDecimal * total - attended) / (1 - targetDecimal)
+                const needed = Math.ceil((targetDecimal * total - attended) / (1 - targetDecimal));
+                return {
+                    type: 'cover',
+                    count: Math.max(0, needed)
+                };
+            }
+        }
+
+        // Function to smoothly scroll to element
+        function smoothScrollToElement(element) {
+            // Check if element exists
+            if (!element) return;
+            
+            // Get the position of the element relative to the viewport
+            const elementRect = element.getBoundingClientRect();
+            const absoluteElementTop = elementRect.top + window.pageYOffset;
+            
+            // Scroll to the element with smooth behavior
+            window.scrollTo({
+                top: absoluteElementTop - 100, // Offset by 100px from top
+                behavior: 'smooth'
+            });
+        }
+        
+        // Function to perform calculation and update display
+        function performCalculation(shouldScroll = false) {
+            const totalLectures = parseInt(totalLecturesInput.value);
+            const attendedLectures = parseInt(attendedLecturesInput.value);
+            const target = parseInt(targetAttendanceSlider.value);
+            
+            // Validate inputs
+            if (isNaN(totalLectures) || isNaN(attendedLectures) || totalLectures < 0 || attendedLectures < 0) {
+                percentageDisplay.textContent = "--%";
+                emojiContainer.textContent = "📊";
+                messageDisplay.textContent = "Enter your lecture data to see your attendance analysis!";
+                lectureCalcDisplay.innerHTML = "";
+                return false;
+            }
+            
+            if (attendedLectures > totalLectures) {
+                percentageDisplay.textContent = "Error!";
+                emojiContainer.textContent = "🤨";
+                messageDisplay.textContent = "You can't attend more lectures than conducted!";
+                lectureCalcDisplay.innerHTML = "";
+                return false;
+            }
+            
+            if (totalLectures === 0) {
+                percentageDisplay.textContent = "0%";
+                emojiContainer.textContent = "😶";
+                messageDisplay.textContent = "No lectures conducted yet!";
+                lectureCalcDisplay.innerHTML = "";
+                return false;
+            }
+            
+            // Calculate percentage
+            const percentage = calculatePercentage(totalLectures, attendedLectures);
+            const formattedPercentage = percentage.toFixed(2);
+            
+            // Get reaction
+            const { emoji, message } = getReaction(percentage, target);
+            
+            // Calculate lectures to bunk or cover
+            const lectureCalc = calculateLecturesNeeded(totalLectures, attendedLectures, target);
+            
+            // Display results
+            percentageDisplay.textContent = `${formattedPercentage}%`;
+            emojiContainer.textContent = emoji;
+            messageDisplay.textContent = message;
+            
+            // Display lecture calculation
+            if (lectureCalc.type === 'bunk' && lectureCalc.count > 0) {
+                lectureCalcDisplay.innerHTML = `🎉 You can bunk <span>${lectureCalc.count}</span> more lecture(s) and still maintain ${target}% attendance!`;
+            } else if (lectureCalc.type === 'bunk' && lectureCalc.count === 0) {
+                lectureCalcDisplay.innerHTML = `⚠️ You're exactly at target! Don't bunk any more lectures or you'll fall below ${target}%!`;
+            } else if (lectureCalc.type === 'cover') {
+                lectureCalcDisplay.innerHTML = `📚 You need to attend <span>${lectureCalc.count}</span> more lecture(s) to reach ${target}% attendance target!`;
+            }
+            
+            // Animate result container
+            resultContainer.style.transform = "scale(1.05)";
+            setTimeout(() => {
+                resultContainer.style.transform = "scale(1)";
+            }, 300);
+            
+            // Smooth scroll to result section if button was clicked
+            if (shouldScroll) {
+                setTimeout(() => {
+                    smoothScrollToElement(resultContainer);
+                }, 100);
+            }
+            
+            return true;
+        }
+        
+        // Calculate button click event
+        calculateBtn.addEventListener('click', function() {
+            // Set button clicked flag
+            buttonClicked = true;
+            
+            // Perform calculation with scroll
+            const success = performCalculation(true);
+            
+            if (success) {
                 // Animate the calculate button
                 this.style.transform = 'scale(0.95)';
                 setTimeout(() => {
                     this.style.transform = 'scale(1)';
                 }, 150);
-            });
-            
-            // Add some example values for easier testing
-            totalLecturesInput.value = 50;
-            attendedLecturesInput.value = 35;
-            
-            // Add some random fun facts on page load
-            const funFacts = [
-                "Did you know? Each bunked lecture decreases your attendance percentage!",
-                "Pro tip: Set your target to 80% for a safe buffer against unexpected bunks!",
-                "Fun fact: 8AM lectures have the lowest attendance but count the same!",
-                "Remember: 75% is the minimum requirement to be exam eligible at PPSU!",
-                "Hot take: Consistent attendance is the easiest way to score extra marks!"
-            ];
-            
-            // Display a random fun fact in the message area on load
-            const randomFact = funFacts[Math.floor(Math.random() * funFacts.length)];
-            messageDisplay.textContent = randomFact;
-            
-            // Auto-calculate when inputs change and both are filled
-            function autoCalculateIfReady() {
-                const total = parseInt(totalLecturesInput.value);
-                const attended = parseInt(attendedLecturesInput.value);
-                
-                if (!isNaN(total) && !isNaN(attended) && total > 0 && attended >= 0) {
-                    calculateBtn.click();
-                }
             }
-            
-            totalLecturesInput.addEventListener('input', autoCalculateIfReady);
-            attendedLecturesInput.addEventListener('input', autoCalculateIfReady);
-            targetAttendanceSlider.addEventListener('input', autoCalculateIfReady);
         });
-    </script>
+        
+        // Add some example values for easier testing
+        totalLecturesInput.value = 50;
+        attendedLecturesInput.value = 35;
+        
+        // Add some random fun facts on page load
+        const funFacts = [
+            "Did you know? Each bunked lecture decreases your attendance percentage!",
+            "Pro tip: Set your target to 80% for a safe buffer against unexpected bunks!",
+            "Fun fact: 8AM lectures have the lowest attendance but count the same!",
+            "Remember: 75% is the minimum requirement to be exam eligible at PPSU!",
+            "Hot take: Consistent attendance is the easiest way to score extra marks!"
+        ];
+        
+        // Display a random fun fact in the message area on load
+        const randomFact = funFacts[Math.floor(Math.random() * funFacts.length)];
+        messageDisplay.textContent = randomFact;
+        
+        // Auto-calculate when inputs change and both are filled (NO SCROLL)
+        function autoCalculateIfReady() {
+            const total = parseInt(totalLecturesInput.value);
+            const attended = parseInt(attendedLecturesInput.value);
+            
+            if (!isNaN(total) && !isNaN(attended) && total > 0 && attended >= 0) {
+                // Perform calculation without scroll
+                performCalculation(false);
+            } else {
+                // Reset to initial state if inputs are invalid
+                percentageDisplay.textContent = "--%";
+                emojiContainer.textContent = "📊";
+                messageDisplay.textContent = "Enter your lecture data to see your attendance analysis!";
+                lectureCalcDisplay.innerHTML = "";
+            }
+        }
+        
+        totalLecturesInput.addEventListener('input', autoCalculateIfReady);
+        attendedLecturesInput.addEventListener('input', autoCalculateIfReady);
+        targetAttendanceSlider.addEventListener('input', autoCalculateIfReady);
+    });
+</script>
 </body>
 </html>
