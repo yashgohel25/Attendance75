@@ -1,0 +1,927 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="PPSU Attendance Calculator - Calculate your PPSU college attendance percentage with target tracking and lecture planning. Plan your bunk strategy to maintain required attendance.">
+    <meta name="keywords" content="PPSU attendance calculator, PPSU college attendance, PPSU bunk calculator, lecture attendance tracker, PPSU exam eligibility, attendance percentage calculator">
+    <title>PPSU Attendance Calculator - Track & Plan Your College Attendance</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Comic Neue', cursive;
+        }
+
+        body {
+            background-color: #f0f0f0;
+            background-image: 
+                radial-gradient(#ff6b6b 1.5px, transparent 1.5px),
+                radial-gradient(#4ecdc4 1.5px, transparent 1.5px);
+            background-size: 40px 40px;
+            background-position: 0 0, 20px 20px;
+            padding: 15px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .container {
+            max-width: 1000px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 25px;
+            padding: 20px 15px;
+            background-color: #fff;
+            border-radius: 20px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            border: 5px dashed #ff6b6b;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .college-name {
+            font-size: 2.5rem;
+            color: #2c3e50;
+            margin-bottom: 8px;
+            text-shadow: 3px 3px 0 #ff6b6b;
+            line-height: 1.2;
+        }
+
+        .tagline {
+            font-size: 1.3rem;
+            color: #34495e;
+            margin-bottom: 12px;
+            line-height: 1.3;
+        }
+
+        .subtitle {
+            font-size: 1rem;
+            color: #7f8c8d;
+            max-width: 700px;
+            margin: 0 auto;
+            line-height: 1.4;
+        }
+
+        .attendance-calculator {
+            background-color: white;
+            border-radius: 20px;
+            padding: 25px 20px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+            margin-bottom: 25px;
+            border: 8px solid #4ecdc4;
+            position: relative;
+        }
+
+        .attendance-calculator::before {
+            content: "🎯";
+            position: absolute;
+            top: -25px;
+            left: -25px;
+            font-size: 50px;
+            transform: rotate(-15deg);
+            z-index: 1;
+        }
+
+        .attendance-calculator::after {
+            content: "📊";
+            position: absolute;
+            bottom: -25px;
+            right: -25px;
+            font-size: 50px;
+            transform: rotate(15deg);
+            z-index: 1;
+        }
+
+        .calculator-title {
+            font-size: 2rem;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            text-align: center;
+            text-decoration: underline wavy #ff6b6b;
+        }
+
+        .input-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .input-box {
+            background-color: #f8f9fa;
+            padding: 18px;
+            border-radius: 15px;
+            border-left: 6px solid #ff6b6b;
+        }
+
+        .input-box h3 {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+            color: #2c3e50;
+            font-size: 1.3rem;
+        }
+
+        .input-box h3 i {
+            color: #ff6b6b;
+        }
+
+        .input-group {
+            margin-bottom: 15px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 1.1rem;
+            color: #2c3e50;
+            font-weight: bold;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 14px;
+            border: 3px solid #4ecdc4;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            transition: all 0.3s;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: #ff6b6b;
+            box-shadow: 0 0 10px rgba(255, 107, 107, 0.5);
+        }
+
+        .target-slider-container {
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 2px dashed #ccc;
+        }
+
+        .target-slider-container label {
+            display: block;
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+            color: #2c3e50;
+            font-weight: bold;
+        }
+
+        .slider-value {
+            font-size: 1.3rem;
+            color: #ff6b6b;
+            font-weight: bold;
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        .slider-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .slider-container input[type="range"] {
+            flex: 1;
+            height: 22px;
+            -webkit-appearance: none;
+            appearance: none;
+            background: #e0e0e0;
+            border-radius: 15px;
+            outline: none;
+        }
+
+        .slider-container input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #ff6b6b;
+            cursor: pointer;
+            border: 4px solid white;
+            box-shadow: 0 0 5px rgba(0,0,0,0.2);
+        }
+
+        .target-buttons {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .target-btn {
+            background-color: #4ecdc4;
+            color: white;
+            border: none;
+            padding: 12px 8px;
+            font-size: 1rem;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: bold;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .target-btn:hover {
+            background-color: #3dbcb4;
+            transform: translateY(-2px);
+        }
+
+        .target-btn.active {
+            background-color: #ff6b6b;
+            box-shadow: 0 4px 8px rgba(255, 107, 107, 0.3);
+        }
+
+        .target-btn small {
+            font-size: 0.8rem;
+            opacity: 0.9;
+            margin-top: 3px;
+        }
+
+        /* Enhanced Calculate Button */
+        .calculate-btn-container {
+            display: flex;
+            justify-content: center;
+            margin: 25px 0;
+        }
+
+        .calculate-btn {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ff5252 100%);
+            color: white;
+            border: none;
+            padding: 20px 45px;
+            font-size: 1.5rem;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: bold;
+            box-shadow: 0 8px 20px rgba(255, 107, 107, 0.4);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .calculate-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #ff5252 0%, #ff6b6b 100%);
+            z-index: -1;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .calculate-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 25px rgba(255, 107, 107, 0.6);
+        }
+
+        .calculate-btn:hover::before {
+            opacity: 1;
+        }
+
+        .calculate-btn:active {
+            transform: translateY(-2px);
+        }
+
+        .calculate-btn i {
+            font-size: 1.6rem;
+        }
+
+        .result-container {
+            background-color: #f8f9fa;
+            border-radius: 15px;
+            padding: 22px;
+            text-align: center;
+            border: 4px dotted #4ecdc4;
+            margin-top: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .result-title {
+            font-size: 1.7rem;
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+
+        .percentage-display {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .percentage {
+            font-size: 3.5rem;
+            font-weight: bold;
+            color: #ff6b6b;
+            text-shadow: 2px 2px 0 #ffd166;
+        }
+
+        .target-percentage {
+            font-size: 1.7rem;
+            color: #4ecdc4;
+            background-color: white;
+            padding: 10px 18px;
+            border-radius: 10px;
+            border: 3px solid #4ecdc4;
+        }
+
+        .emoji-container {
+            font-size: 4.5rem;
+            margin-bottom: 15px;
+            transition: all 0.5s;
+        }
+
+        .message {
+            font-size: 1.5rem;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            min-height: 40px;
+        }
+
+        /* Enhanced Lecture Calculation Display */
+        .lecture-calc {
+            background: linear-gradient(135deg, #ffd166 0%, #ffb347 100%);
+            padding: 22px;
+            border-radius: 15px;
+            margin-top: 20px;
+            border-left: 8px solid #ff6b6b;
+            font-size: 1.4rem;
+            color: #2c3e50;
+            font-weight: bold;
+            box-shadow: 0 6px 15px rgba(255, 179, 71, 0.3);
+            text-align: center;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+            100% { transform: scale(1); }
+        }
+
+        .lecture-calc span {
+            font-weight: bold;
+            color: #d64545;
+            font-size: 1.6rem;
+        }
+
+        .info-section {
+            background-color: white;
+            border-radius: 20px;
+            padding: 22px;
+            margin-bottom: 25px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            border-left: 8px solid #ffd166;
+        }
+
+        .info-title {
+            font-size: 1.7rem;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .info-title i {
+            color: #ff6b6b;
+        }
+
+        .info-text {
+            font-size: 1.1rem;
+            color: #34495e;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .lecture-list {
+            list-style-type: none;
+            padding-left: 20px;
+        }
+
+        .lecture-list li {
+            margin-bottom: 10px;
+            padding-left: 10px;
+            position: relative;
+        }
+
+        .lecture-list li::before {
+            content: "📚";
+            position: absolute;
+            left: -20px;
+        }
+
+        .warning {
+            background-color: #fff9e6;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 15px;
+            border-left: 5px solid #ffd166;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px 15px;
+            color: #7f8c8d;
+            font-size: 1rem;
+            width: 100%;
+            margin-top: auto;
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .creator-info {
+            margin-top: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .creator-info a {
+            color: #ff6b6b;
+            text-decoration: none;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s;
+        }
+
+        .creator-info a:hover {
+            color: #ff5252;
+            transform: translateY(-2px);
+        }
+
+        .meme-disclaimer {
+            font-style: italic;
+            margin-top: 10px;
+            font-size: 0.9rem;
+        }
+
+        /* Responsive Design Improvements */
+        @media (max-width: 768px) {
+            .college-name {
+                font-size: 2rem;
+            }
+            
+            .tagline {
+                font-size: 1.1rem;
+            }
+            
+            .attendance-calculator {
+                padding: 20px 15px;
+            }
+            
+            .percentage {
+                font-size: 3rem;
+            }
+            
+            .emoji-container {
+                font-size: 4rem;
+            }
+            
+            .attendance-calculator::before,
+            .attendance-calculator::after {
+                display: none;
+            }
+            
+            .input-section {
+                grid-template-columns: 1fr;
+            }
+            
+            .target-buttons {
+                grid-template-columns: 1fr;
+            }
+            
+            .calculate-btn {
+                padding: 18px 30px;
+                font-size: 1.3rem;
+            }
+            
+            .lecture-calc {
+                font-size: 1.2rem;
+                padding: 18px;
+            }
+            
+            .lecture-calc span {
+                font-size: 1.4rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 10px;
+            }
+            
+            .college-name {
+                font-size: 1.7rem;
+            }
+            
+            .tagline {
+                font-size: 1rem;
+            }
+            
+            .calculator-title {
+                font-size: 1.7rem;
+            }
+            
+            .percentage {
+                font-size: 2.5rem;
+            }
+            
+            .calculate-btn {
+                padding: 16px 25px;
+                font-size: 1.2rem;
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .percentage-display {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .target-percentage {
+                font-size: 1.4rem;
+            }
+            
+            .lecture-calc {
+                font-size: 1.1rem;
+                padding: 15px;
+            }
+            
+            .lecture-calc span {
+                font-size: 1.3rem;
+            }
+            
+            .creator-info {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1 class="college-name">PPSU Attendance Calculator</h1>
+            <p class="tagline">Track your attendance and plan your bunk strategy! 🎯</p>
+            <p class="subtitle">Calculate your PPSU attendance percentage and see how many lectures you can bunk or need to cover to reach your target!</p>
+        </header>
+
+        <main>
+            <section class="attendance-calculator">
+                <h2 class="calculator-title">PPSU Attendance Calculator 🧮</h2>
+                
+                <div class="input-section">
+                    <div class="input-box">
+                        <h3><i class="fas fa-chalkboard-teacher"></i> Lectures Info</h3>
+                        
+                        <div class="input-group">
+                            <label for="total-lectures">Total Lectures Conducted</label>
+                            <input type="number" id="total-lectures" min="0" placeholder="Enter total lectures">
+                        </div>
+                        
+                        <div class="input-group">
+                            <label for="attended-lectures">Lectures You Attended</label>
+                            <input type="number" id="attended-lectures" min="0" placeholder="Enter attended lectures">
+                        </div>
+                    </div>
+                    
+                    <div class="input-box">
+                        <h3><i class="fas fa-bullseye"></i> Target Settings</h3>
+                        
+                        <div class="input-group">
+                            <label for="target-attendance">Target Attendance Percentage</label>
+                            <div class="slider-container">
+                                <input type="range" id="target-attendance" min="50" max="100" value="75" step="5">
+                                <span id="target-value">75%</span>
+                            </div>
+                            <div class="slider-value" id="target-display">Target: 75%</div>
+                        </div>
+                        
+                        <div class="target-slider-container">
+                            <p><strong>Quick Targets:</strong></p>
+                            <div class="target-buttons">
+                                <button class="target-btn" data-target="65">
+                                    65% 
+                                    <small>Minimum</small>
+                                </button>
+                                <button class="target-btn active" data-target="75">
+                                    75% 
+                                    <small>Standard</small>
+                                </button>
+                                <button class="target-btn" data-target="85">
+                                    85% 
+                                    <small>Safe Zone</small>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="calculate-btn-container">
+                    <button class="calculate-btn" id="calculate-btn">
+                        <i class="fas fa-calculator"></i> Calculate My Attendance!
+                    </button>
+                </div>
+                
+                <div class="result-container" id="result-container">
+                    <h3 class="result-title">Your Attendance Analysis:</h3>
+                    
+                    <div class="percentage-display">
+                        <div class="percentage" id="percentage">--%</div>
+                        <div class="target-percentage">Target: <span id="target-percentage">75%</span></div>
+                    </div>
+                    
+                    <div class="emoji-container" id="emoji-container">📊</div>
+                    <div class="message" id="message">Enter your lecture data to see your attendance analysis!</div>
+                    
+                    <div class="lecture-calc" id="lecture-calc">
+                        <!-- This will show how many lectures to bunk or cover -->
+                    </div>
+                </div>
+            </section>
+            
+            <section class="info-section">
+                <h2 class="info-title"><i class="fas fa-info-circle"></i> How PPSU Attendance System Works</h2>
+                <p class="info-text">At PPSU, attendance is calculated <strong>lecture-by-lecture</strong>, not by days. Each subject has its own attendance tracking system.</p>
+                
+                <ul class="lecture-list">
+                    <li>Attendance is marked in every single lecture (yes, every one!)</li>
+                    <li>Minimum requirement is 75% attendance to be eligible for exams</li>
+                    <li>This calculator helps you plan your bunk strategy wisely!</li>
+                    <li>Set your target and see how many lectures you can afford to miss</li>
+                    <li>Track your progress throughout the semester</li>
+                </ul>
+                
+                <div class="warning">
+                    <p><strong>Pro Tip:</strong> Gain high attendance early in the semester by attending all initial lectures. This creates a buffer that allows you to bunk more lectures later without falling below the required percentage!</p>
+                </div>
+            </section>
+        </main>
+        
+        <footer>
+            <p>PPSU Attendance Calculator - Made with ❤️ for PPSU students</p>
+            <p class="meme-disclaimer">This is a fun project. Always verify your actual attendance with your college authorities.</p>
+            
+            <div class="creator-info">
+                <span>Created by:</span>
+                <a href="https://www.instagram.com/yash_gohel_2510/" target="_blank" rel="noopener">
+                    <i class="fab fa-instagram"></i> Yash Gohel
+                </a>
+                <span>|</span>
+                <a href="https://www.instagram.com/yash_gohel_2510/" target="_blank" rel="noopener">
+                    <i class="fas fa-user"></i> @yash_gohel_2510
+                </a>
+            </div>
+            
+            <p>PPSU Attendance Calculator | Not officially affiliated with PPSU</p>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Get DOM elements
+            const totalLecturesInput = document.getElementById('total-lectures');
+            const attendedLecturesInput = document.getElementById('attended-lectures');
+            const targetAttendanceSlider = document.getElementById('target-attendance');
+            const targetValueDisplay = document.getElementById('target-value');
+            const targetDisplay = document.getElementById('target-display');
+            const targetPercentageDisplay = document.getElementById('target-percentage');
+            const calculateBtn = document.getElementById('calculate-btn');
+            const percentageDisplay = document.getElementById('percentage');
+            const emojiContainer = document.getElementById('emoji-container');
+            const messageDisplay = document.getElementById('message');
+            const lectureCalcDisplay = document.getElementById('lecture-calc');
+            const resultContainer = document.getElementById('result-container');
+            const targetButtons = document.querySelectorAll('.target-btn');
+            
+            // Update target slider display
+            function updateTargetDisplay() {
+                const targetValue = targetAttendanceSlider.value;
+                targetValueDisplay.textContent = `${targetValue}%`;
+                targetDisplay.textContent = `Target: ${targetValue}%`;
+                targetPercentageDisplay.textContent = `${targetValue}%`;
+            }
+            
+            // Set up target slider
+            targetAttendanceSlider.addEventListener('input', updateTargetDisplay);
+            updateTargetDisplay(); // Initial display
+            
+            // Set up target buttons
+            targetButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const targetValue = this.getAttribute('data-target');
+                    targetAttendanceSlider.value = targetValue;
+                    updateTargetDisplay();
+                    
+                    // Update active button
+                    targetButtons.forEach(btn => btn.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // Animate the button
+                    this.style.transform = 'scale(0.95)';
+                    setTimeout(() => {
+                        this.style.transform = 'scale(1)';
+                    }, 200);
+                });
+            });
+            
+            // Function to calculate attendance percentage
+            function calculatePercentage(total, attended) {
+                if (total === 0) return 0;
+                return (attended / total) * 100;
+            }
+            
+            // Function to get emoji and message based on attendance vs target
+            function getReaction(percentage, target) {
+                let emoji, message;
+                
+                if (percentage === 0) {
+                    emoji = "😵";
+                    message = "Bro, do you even attend college?";
+                } else if (percentage < target - 20) {
+                    emoji = "😭";
+                    message = "You're way below target! Time to attend ALL lectures!";
+                } else if (percentage < target - 10) {
+                    emoji = "😰";
+                    message = "You're falling behind! Better start attending more!";
+                } else if (percentage < target) {
+                    emoji = "😟";
+                    message = "You're close but below target! Just a bit more effort!";
+                } else if (percentage < target + 5) {
+                    emoji = "🙂";
+                    message = "You're on target! Safe zone achieved!";
+                } else if (percentage < target + 15) {
+                    emoji = "😎";
+                    message = "Sigma grindset! You're above target!";
+                } else if (percentage < target + 25) {
+                    emoji = "🔥";
+                    message = "Absolute legend! Way above target!";
+                } else {
+                    emoji = "🏆";
+                    message = "PERFECT ATTENDANCE! You're crushing it!";
+                }
+                
+                return { emoji, message };
+            }
+            
+            // Function to calculate lectures to bunk or cover
+            function calculateLecturesNeeded(total, attended, target) {
+                const targetDecimal = target / 100;
+                
+                // If already at or above target: calculate how many can be bunked
+                if (attended / total >= targetDecimal) {
+                    // Solve for x: (attended) / (total + x) >= targetDecimal
+                    // x <= (attended / targetDecimal) - total
+                    const maxBunkable = Math.floor((attended / targetDecimal) - total);
+                    return {
+                        type: 'bunk',
+                        count: Math.max(0, maxBunkable)
+                    };
+                } 
+                // If below target: calculate how many need to be attended
+                else {
+                    // Solve for y: (attended + y) / (total + y) >= targetDecimal
+                    // y >= (targetDecimal * total - attended) / (1 - targetDecimal)
+                    const needed = Math.ceil((targetDecimal * total - attended) / (1 - targetDecimal));
+                    return {
+                        type: 'cover',
+                        count: Math.max(0, needed)
+                    };
+                }
+            }
+            
+            // Calculate button click event
+            calculateBtn.addEventListener('click', function() {
+                const totalLectures = parseInt(totalLecturesInput.value);
+                const attendedLectures = parseInt(attendedLecturesInput.value);
+                const target = parseInt(targetAttendanceSlider.value);
+                
+                // Validate inputs
+                if (isNaN(totalLectures) || isNaN(attendedLectures) || totalLectures < 0 || attendedLectures < 0) {
+                    percentageDisplay.textContent = "Error!";
+                    emojiContainer.textContent = "🤔";
+                    messageDisplay.textContent = "Please enter valid numbers!";
+                    lectureCalcDisplay.innerHTML = "";
+                    return;
+                }
+                
+                if (attendedLectures > totalLectures) {
+                    percentageDisplay.textContent = "Error!";
+                    emojiContainer.textContent = "🤨";
+                    messageDisplay.textContent = "You can't attend more lectures than conducted!";
+                    lectureCalcDisplay.innerHTML = "";
+                    return;
+                }
+                
+                if (totalLectures === 0) {
+                    percentageDisplay.textContent = "0%";
+                    emojiContainer.textContent = "😶";
+                    messageDisplay.textContent = "No lectures conducted yet!";
+                    lectureCalcDisplay.innerHTML = "";
+                    return;
+                }
+                
+                // Calculate percentage
+                const percentage = calculatePercentage(totalLectures, attendedLectures);
+                const formattedPercentage = percentage.toFixed(2);
+                
+                // Get reaction
+                const { emoji, message } = getReaction(percentage, target);
+                
+                // Calculate lectures to bunk or cover
+                const lectureCalc = calculateLecturesNeeded(totalLectures, attendedLectures, target);
+                
+                // Display results
+                percentageDisplay.textContent = `${formattedPercentage}%`;
+                emojiContainer.textContent = emoji;
+                messageDisplay.textContent = message;
+                
+                // Display lecture calculation
+                if (lectureCalc.type === 'bunk' && lectureCalc.count > 0) {
+                    lectureCalcDisplay.innerHTML = `🎉 You can bunk <span>${lectureCalc.count}</span> more lecture(s) and still maintain ${target}% attendance!`;
+                } else if (lectureCalc.type === 'bunk' && lectureCalc.count === 0) {
+                    lectureCalcDisplay.innerHTML = `⚠️ You're exactly at target! Don't bunk any more lectures or you'll fall below ${target}%!`;
+                } else if (lectureCalc.type === 'cover') {
+                    lectureCalcDisplay.innerHTML = `📚 You need to attend <span>${lectureCalc.count}</span> more lecture(s) to reach ${target}% attendance target!`;
+                }
+                
+                // Animate result container
+                resultContainer.style.transform = "scale(1.05)";
+                setTimeout(() => {
+                    resultContainer.style.transform = "scale(1)";
+                }, 300);
+                
+                // Animate the calculate button
+                this.style.transform = 'scale(0.95)';
+                setTimeout(() => {
+                    this.style.transform = 'scale(1)';
+                }, 150);
+            });
+            
+            // Add some example values for easier testing
+            totalLecturesInput.value = 50;
+            attendedLecturesInput.value = 35;
+            
+            // Add some random fun facts on page load
+            const funFacts = [
+                "Did you know? Each bunked lecture decreases your attendance percentage!",
+                "Pro tip: Set your target to 80% for a safe buffer against unexpected bunks!",
+                "Fun fact: 8AM lectures have the lowest attendance but count the same!",
+                "Remember: 75% is the minimum requirement to be exam eligible at PPSU!",
+                "Hot take: Consistent attendance is the easiest way to score extra marks!"
+            ];
+            
+            // Display a random fun fact in the message area on load
+            const randomFact = funFacts[Math.floor(Math.random() * funFacts.length)];
+            messageDisplay.textContent = randomFact;
+            
+            // Auto-calculate when inputs change and both are filled
+            function autoCalculateIfReady() {
+                const total = parseInt(totalLecturesInput.value);
+                const attended = parseInt(attendedLecturesInput.value);
+                
+                if (!isNaN(total) && !isNaN(attended) && total > 0 && attended >= 0) {
+                    calculateBtn.click();
+                }
+            }
+            
+            totalLecturesInput.addEventListener('input', autoCalculateIfReady);
+            attendedLecturesInput.addEventListener('input', autoCalculateIfReady);
+            targetAttendanceSlider.addEventListener('input', autoCalculateIfReady);
+        });
+    </script>
+</body>
+</html>
