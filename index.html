@@ -535,7 +535,7 @@
 
       <div class="faq-item">
         <div class="faq-q">What is the PPSU attendance 75 rule? <span class="tog">+</span></div>
-        <div class="faq-a">PPSU says: attend at least 75% of overall subjects otherwise you can't sit in the exam. No negotiation, no discount, no "but sir my dog was sick." This PPSU attendance calculator helps you stay on the right side of 75%.</div>
+        <div class="faq-a">PPSU says: attend at least 75% of lectures per subject or you can't sit in the exam. No negotiation, no discount, no "but sir my dog was sick." This PPSU attendance calculator helps you stay on the right side of 75%.</div>
       </div>
       <div class="faq-item">
         <div class="faq-q">How many lectures can I bunk at PPSU? <span class="tog">+</span></div>
@@ -563,7 +563,7 @@
     <section class="info-card" aria-labelledby="about-h">
       <h2 id="about-h"><i class="fas fa-info-circle"></i> About This PPSU Bunk Calculator</h2>
       <p>This free <strong>PPSU attendance 75 calculator</strong> was made by a PPSU student who got tired of doing mental math mid-panic-attack. If you've searched for "<strong>ppsu attendance</strong>", "<strong>ppsu bunk calculator</strong>", "<strong>ppsu attendence 75</strong>", "<strong>ppsu attandance calculator</strong>", "<strong>ppsu attendance 75</strong>" — you found the right place.</p>
-      <p>No signup, no login, , no nonsense. Enter your numbers, hit Calculate, and know your fate. Works on mobile at 2 AM. Works during lab hours when you're pretending to code. Works always.</p>
+      <p>No signup, no login, no ads, no nonsense. Enter your numbers, hit Calculate, and know your fate. Works on mobile at 2 AM. Works during lab hours when you're pretending to code. Works always.</p>
       <p style="font-size:.83rem;margin-top:4px;">Also covers: <em>ppsu attendence calculator · ppsu 75 percent attendance · ppsu lecture calculator · ppsu exam eligibility · ppsu attendance tracker · ppsu attandence 75</em></p>
     </section>
   </main>
@@ -578,7 +578,7 @@
       </a>
     </p>
     <p><a href="https://ppsuattendance75.vercel.app/" style="color:var(--muted);font-weight:600;font-size:.82rem;">ppsuattendance75.vercel.app</a> &nbsp;|&nbsp; Not affiliated with PPSU</p>
-    <p class="disclaimer">⚠️ Always verify attendance on PPSU's official portal. We calculate; we don't negotiate with Dean. Results are accurate but we are not responsible for your life choices.</p>
+    <p class="disclaimer">⚠️ Always verify attendance on PPSU's official portal. We calculate; we don't negotiate with HODs. Results are accurate but we are not responsible for your life choices.</p>
   </footer>
 </div>
 
@@ -599,48 +599,265 @@ document.addEventListener('DOMContentLoaded', () => {
   const resultBox  = document.getElementById('result-box');
   const presetBtns = document.querySelectorAll('.preset-btn');
 
-  const PRESETS = { 65:'😈 Living dangerously — yolo mode ON!', 75:'🎯 PPSU minimum — the magic number', 85:'📚 Safe zone — topper energy activated', 90:'💀 No social life detected. But great attendance.' };
+  const PRESETS = {
+    65: '😈 Yolo mode ON — living dangerously, no helmet!',
+    75: '🎯 PPSU minimum — the sacred number. No less.',
+    85: '📚 Safe zone — full topper energy, very sus 👀',
+    90: '💀 No social life detected. Error 404: fun not found.'
+  };
 
+  function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+
+  /* ═══════════════════════════════════════════════
+     🎭 100+ MEGA MESSAGE POOL
+     Indian memes · Trending refs · Hinglish vibes
+  ═══════════════════════════════════════════════ */
+  const MSGS = {
+
+    zero: {
+      e: ['💀','👻','🫥','😶‍🌫️','🕳️','☠️'],
+      m: [
+        "Bro attended 0 lectures. The register has your name. Your soul does not. 👻",
+        "0% attendance. You are paying lakhs to become a ghost. Chai piyé, college nahi gaye.",
+        "The security guard thinks you're a WiFi password — heard of but never seen.",
+        "Zero lectures attended. Even the bench misses you. THE BENCH, bro.",
+        "Bold strategy attending zero lectures. Let's see if it pays off. (Narrator: it did not.)",
+        "Your ID card is collecting more dust than knowledge. Inspiring, really.",
+        "Not a single lecture. You Thanos-snapped yourself out of this semester. 🫰",
+        "The professor marks you absent from memory now. Sad respect.",
+        "Bhai, tu toh College Drop-out bhi nahi — tu College Never-Went hai. 💀",
+        "Your attendance is like 4G in a basement — theoretically possible, practically absent.",
+        "0% attendance = 0% exam entry. This is a skill. A terrible, terrible skill.",
+        "Bhai 0%? Even Pavri Ho Rahi Hai girl showed up more than you.",
+        "This is not a bunk calculator anymore. This is an intervention. 🫂",
+        "Jadoo would be proud of how invisible you've made yourself. 👽"
+      ]
+    },
+
+    way_below: {
+      e: ['😭','🫠','💸','🏳️','🚑','📉'],
+      m: [
+        "You're so far below 75%, the attendance register soft-blocked you.",
+        "This isn't a bunk calculator. This is a grief counsellor now. Run.",
+        "Your attendance has villain origin story energy. Something went VERY wrong early on.",
+        "Teri attendance dekh ke HOD ne chai chhod di. Black coffee pe aa gaye tension mein. ☕",
+        "You need to attend every lecture including ones not yet scheduled.",
+        "The printer in admin is warm. Your parents' letter is loading... ⏳",
+        "75% looks like a dream right now. Like Jio signal in a metro tunnel.",
+        "Bhai 'Kuch Kuch Hota Hai' energy — bohot kuch hota tha, but not attendance.",
+        "Your attendance graph looks like India's stock market on a really bad Tuesday. 📉",
+        "Even the proxy attendance app gave up on you. NEW LOW, bhai.",
+        "Main Hoon Na situation — but no SRK is coming to save your semester.",
+        "Bhai you are so cooked, Barbeque Nation themselves called to check in. 🔥",
+        "The attendance sheet whispers your name like a ghost story to scare freshers.",
+        "Itni low attendance? RCB's win rate is better than this. And that's SAYING something.",
+        "Your attendance is lower than Dhinchak Pooja's music ratings. Bhai. That's BAD.",
+        "Bhai seedha seedha bol — season ticket liya college ka, match dekhne nahi aya. 🎟️",
+        "Your college doing IPL auction vibes — releasing you from the squad. 😬",
+        "Bhai yaar BYJU'S bhi band ho gaya — apni attendance toh bacha lo. 😭",
+        "At this point your attendance is more missing than Amitabh Bachchan's hairline. Respect, but no.",
+        "You've unlocked a new achievement: 'The Bermuda Student' — present on paper, missing in reality."
+      ]
+    },
+
+    below_bad: {
+      e: ['😰','🙈','😣','⚠️','😬','🥴'],
+      m: [
+        "The HOD is writing your name on a sticky note. Not the good kind. Not at all.",
+        "You're falling behind fast. Imagine explaining this at home. Actually don't. 😬",
+        "Bhai ek aur bunk aur ghar wale college se pehle call karenge. 📞",
+        "This is the Pushpa: I will not come to college arc. It's not going well.",
+        "Your attendance looks like Zomato order in bad weather — barely moving.",
+        "Bhai teri situation dekh ke professor ne bhi 'Kya Karen' wali face banai. 😐",
+        "You've entered the danger zone. Top Gun music is playing but NOT in a cool way.",
+        "Tu thik hai na? — every prof who noticed your empty seat for 3 weeks straight.",
+        "This is giving forgot-to-submit-assignment-for-entire-semester energy. Chaotic.",
+        "You'll need to write a sorry letter longer than your thesis to fix this.",
+        "Your attendance is lower than the temperature in Shimla in December. FREEZING. 🥶",
+        "Professor ne tumhara naam liya aur poori class ne window ke bahar dekha. 😐",
+        "You're the student who has attendance of someone who thinks college is optional. It's not.",
+        "Bhai this is BGMI final zone energy — critical damage incoming from all sides.",
+        "Your attendance doing Sasta Swiggy — sometimes delivers, mostly missing in action.",
+        "Yaar ye 'Main Kal Se Pakka Jaunga' wala phase kab khatam hoga? 😔"
+      ]
+    },
+
+    below_close: {
+      e: ['😟','😓','🫣','😧','🤧','😮‍💨'],
+      m: [
+        "Close to danger. One more bunk = family meeting at college. 😬",
+        "Itna close and still below? Losing by 1 run in last ball. RCB understands your pain.",
+        "You're ONE lecture away from safe zone. Just ONE. Please go tomorrow.",
+        "Bhai ek baar toh alarm ko side mat karo. Sirf ek baar. 🙏",
+        "This is BGMI last zone situation — bahut pressure hai bhai. Move.",
+        "Itna close! Bhai yaar — Netflix band karo, college jao. Seedha.",
+        "Almost safe. ALMOST. Like almost passing in CGPA. So painful. So avoidable.",
+        "You're one lecture away from sleeping peacefully. Just go tomorrow. ONE lecture.",
+        "This is giving Jaldi karo warna late ho jaoge energy from dad at 8 AM. Still late anyway.",
+        "Kal mat socho. Bas kal jao. Bus seat bhi bookmarked karo canteen wali.",
+        "Bhai tu woh 'bohot close tha' wala meme mat ban. Please. We beg.",
+        "Your situation is like India needing 12 off last 2 balls. Tense but possible. GO."
+      ]
+    },
+
+    razor_edge_below: {
+      e: ['🥵','😱','🫠','🤯','💨','🫨'],
+      m: [
+        "JUST below target. One lecture = salvation. Run to college like Ranveer Singh on set. 🏃",
+        "Itni kam difference mein fail hoge? Kal seedha front row mein baithna. No discussion.",
+        "You are 1-2 lectures from safety. This is Squid Game Round 1 energy. Survive.",
+        "Bhai aaj raat padhai nahi, kal subah 8 AM college. Deal? DEAL. No negotiation.",
+        "So close it hurts. Like watching India lose by 2 runs. PAIN. Pure pain.",
+        "Bus door se nikalti dekhi moment. STILL TIME TO RUN. 🚌",
+        "Kal dikho. Canteen mein chai lo, class mein baitho, EXIST. That's all you need.",
+        "Teen alarm lagao. Ek bhi mat snooze karna. I'm serious. VERY serious. 😤",
+        "Bhai dekho — ek lecture ki hi baat hai. Even Shikhar Dhawan scored under pressure. Tu kar sakta.",
+        "Is lecture se zyada drama kisi Netflix show mein nahi. Just go.",
+        "Bhai itna close mat rehna edge pe. Saans bhi lena dangerous hai ab. 😬"
+      ]
+    },
+
+    barely_safe: {
+      e: ['😅','🫤','😬','🤏','🥹','😮‍💨'],
+      m: [
+        "You're above 75% — barely. Don't breathe wrong. Don't blink. Don't bunk.",
+        "Safe by inches. India winning T20 by 1 wicket energy. Celebrate quietly. Very quietly.",
+        "Bhai tu safe hai but ek bunk bhi maat lena. Please. Ek bhi nahi. Zero.",
+        "This is 'ab isko touch mat karna' level stability. Fragile. Very fragile. Handle with care.",
+        "Technically safe. Emotionally unstable. Attendance on thin ice. 🧊",
+        "Safe zone achieved but this is not the flex you think it is. Just attend more.",
+        "Bhai tu cricket fan hai? 1 run required last ball. That's your attendance situation. 😰",
+        "You're at 75% + small margin. This is 'exactly on time' energy. Fine. Not great. Fine.",
+        "Ek bunk aur nahi lena yaar. Ye bata do toh attendance calculator ne bhi haath jod liye.",
+        "Safe? Technically yes. Comfortable? LOL no. Peace of mind? Gone. Sleep well tonight (you won't).",
+        "Bhai bilkul Thala Dhoni last ball jaisi situation — managed it, but hearts stopped. 🫀"
+      ]
+    },
+
+    comfortable: {
+      e: ['🙂','😌','✅','👍','😎','🧘'],
+      m: [
+        "Safe! Small bunk budget available. Spend wisely. NOT on a 9 AM physics lecture. 🙂",
+        "Good attendance! You can breathe now. One breath. Don't get cocky.",
+        "Bhai attendance theek hai. Ab bas ek-do bunk mein khatam mat karna yaar. 🙏",
+        "You've unlocked Chill Mode Lite version. Premium requires more attendance.",
+        "Solid! You're like Virat on a steady day — not a century, but dependable.",
+        "Safe zone entered. Unlike RCB, you might actually qualify this semester. 🏏",
+        "Bhai decent hai. This is chai biscuit wala satisfaction level. Comfy. Content.",
+        "Good position! You can skip a lecture. ONE. Uno. Ek. Not two. Not three. ONE.",
+        "Comfortable attendance. Not a legend, not a tragedy. Pure balance.",
+        "Bhai you're safe. Ghanta class mein ja. But not every ghanta. Kuch toh dekh.",
+        "This is Delhi winters temperature — not freezing, not hot. Just right. 🌤️",
+        "You're safe and that's valid. Not everything needs to be sigma. Sometimes just show up.",
+        "Bhai 'sab theek hai' energy. No drama, no HOD meetings. Living the simple life. 🌿",
+        "Your attendance is giving reliable friend energy — always there when it counts. 🫂"
+      ]
+    },
+
+    good: {
+      e: ['😎','🔥','🤙','💪','🫡','🧠'],
+      m: [
+        "Sigma attendance achieved. You've cracked the PPSU bunk code. Use it responsibly. (You won't.)",
+        "Bhai attendance dekh ke professor bhi 'Main toh bas dekh raha tha' wali face karte hain. 😌",
+        "You're built different. Attendance high, bunks secured. This is the way. 🫡",
+        "This is 'Bhai kya scene hai' energy — tumhara scene ekdum solid hai bhai.",
+        "Bhai you're eating good. Attendance safe hai aur bunk quota bhi hai. Rare combo.",
+        "PPSU bunk calculator certified smart student. You played it well, ngl.",
+        "Tumhari attendance dekh ke seniors bhi guide maangte. Gyaan baant bhai. 🙏",
+        "Ranveer Singh energy — loud, present, and somehow always winning. 💥",
+        "Bhai attendance > 85%? You've clearly never discovered Netflix mid-semester.",
+        "Zomato Gold + free delivery moment — you've got attendance AND bunk balance. 🍕",
+        "Solid attendance. Solid life choices. Solid human being. Probably.",
+        "You're living the PPSU dream — high attendance, zero HOD meetings. This is it.",
+        "Bhai you're Dhoni-level calm. Attendance safe, no panic, full control. 🧢",
+        "Apun hi bhagwan hai — tumhara attendance dekh ke toh lagta hai yaar. 😂",
+        "This is protagonist energy. The universe rewards consistent lecture-goers. Sometimes.",
+        "Bhai itni attendance? Tu hi toh woh student hai jisko professors example mein dete hain. 🎓",
+        "You've mastered the art of being present. Zen master vibes. 🧘",
+        "Main character energy confirmed. Your attendance arc has a happy ending.",
+        "Bhai Hardik Pandya wali consistency — inconsistent in life but DELIVERED when it mattered. 💪"
+      ]
+    },
+
+    very_good: {
+      e: ['🔥','🏆','😤','🫅','🤩','👑'],
+      m: [
+        "You could skip a whole week and still pass. Don't. But statistically... you could. 🤫",
+        "Bhai itni attendance kisi ki nahi hoti. Tu toh alag hi mitti ka hai. 💪",
+        "Ghar se tiffin leke aaya dedicated student energy. Rare. Powerful. Feared.",
+        "Your attendance is giving IPL finals energy — top of the table, secured a spot.",
+        "Bhai tujhe kya hua? Tu toh lecture se pehle hi pahunch jaata hoga. 😭",
+        "Your prof mentioned your attendance as an example in a lecture. You're a legend now.",
+        "GOAT territory. Attendance itni hai ke register tumhara wait karta hai. 🐐",
+        "Rohit Sharma century attendance — rare, powerful, absolutely beautiful. 🏏",
+        "Tumhara attendance dekh ke ChatGPT bhi motivational speech deta — Isko dekho!",
+        "Main toh waise bhi aata hun achievement unlocked. TOP TIER. 🏆",
+        "Itni attendance ke baad bhi agar exam mein fail hua toh... bhai... kya hua? 😅",
+        "You're in the sick-week + Goa trip + still fine zone. 🏖️ The dream.",
+        "Bhai teri attendance certificate frame karne layak hai. Seriously.",
+        "You didn't just win the attendance game — you became the attendance game. 🎮"
+      ]
+    },
+
+    perfect: {
+      e: ['🏆','🫡','👑','🥇','😇','🌟'],
+      m: [
+        "100% attendance?! You either love college or it's your only escape. Both valid. 🫡",
+        "Perfect attendance. The professor knows your face better than their own family. 💀",
+        "Bhai 100%?? Ghar pe sab theek hai na? College kyun nahi chhodte kabhi kabhi? 😭",
+        "You are the main character. The professor mentions you. The register loves you. You have no life.",
+        "Bhai 100% = zero rest days, zero off days, zero 'aaj mann nahi' days. HOW?? 🤯",
+        "Mumbai local every day AND enjoyed it level dedication. Unhinged. Legendary. Unhinged.",
+        "You're the student teachers show photos of to other students. No pressure. 📸",
+        "100%! Ek bhi holiday waste nahi hua. Ek bhi bandh nahi liya. Main shocked hun bhai. 😲",
+        "The PPSU attendance hall of fame is calling. Please pick up. 🏛️",
+        "Bhai tu toh Professor ka bachha hai kya? 100% attendance ka matlab kya hai yaar. 😂",
+        "You have achieved what most only dream of. Also you probably have 0 sleep. Please rest.",
+        "Full attendance. The bench knows your weight. The fan knows your heat. Historic. 🪑",
+        "Bhai 100%? Even the chai wala knows your order by heart. You're basically faculty now.",
+        "Legend status: CONFIRMED. Your attendance% is the same as your dedication%. Rare dono. 🌟"
+      ]
+    }
+  };
+
+  /* ─── get reaction ─── */
+  function getReaction(pct, target) {
+    const diff = pct - target;
+    if (pct === 0)   return { e: pick(MSGS.zero.e),              m: pick(MSGS.zero.m) };
+    if (pct >= 99.9) return { e: pick(MSGS.perfect.e),           m: pick(MSGS.perfect.m) };
+    if (diff < -20)  return { e: pick(MSGS.way_below.e),         m: pick(MSGS.way_below.m) };
+    if (diff < -10)  return { e: pick(MSGS.below_bad.e),         m: pick(MSGS.below_bad.m) };
+    if (diff < -5)   return { e: pick(MSGS.below_close.e),       m: pick(MSGS.below_close.m) };
+    if (diff < 0)    return { e: pick(MSGS.razor_edge_below.e),  m: pick(MSGS.razor_edge_below.m) };
+    if (diff < 3)    return { e: pick(MSGS.barely_safe.e),       m: pick(MSGS.barely_safe.m) };
+    if (diff < 8)    return { e: pick(MSGS.comfortable.e),       m: pick(MSGS.comfortable.m) };
+    if (diff < 15)   return { e: pick(MSGS.good.e),              m: pick(MSGS.good.m) };
+    return                  { e: pick(MSGS.very_good.e),         m: pick(MSGS.very_good.m) };
+  }
+
+  /* ─── slider sync ─── */
   function syncRange() {
     const v = parseInt(rangeEl.value);
     chipVal.textContent = v + '%';
-    const isPreset = PRESETS[v] !== undefined;
-    if (isPreset) {
+    if (PRESETS[v]) {
       rangeDisp.textContent = v + '%';
       rangeDisp.classList.remove('is-custom');
       rangeSub.textContent = PRESETS[v];
     } else {
       rangeDisp.textContent = 'Custom ' + v + '%';
       rangeDisp.classList.add('is-custom');
-      rangeSub.textContent = '✏️ Custom target — you said "' + v + '%", huh? Respect. You know what you want.';
+      rangeSub.textContent = '✏️ "' + v + '%" — okay specific, we respect the precision king energy 👑';
     }
     presetBtns.forEach(b => b.classList.toggle('active', parseInt(b.dataset.val) === v));
   }
 
   rangeEl.addEventListener('input', () => { syncRange(); autoCalc(); });
   syncRange();
-
   presetBtns.forEach(btn => {
-    btn.addEventListener('click', () => {
-      rangeEl.value = btn.dataset.val;
-      syncRange(); autoCalc();
-    });
+    btn.addEventListener('click', () => { rangeEl.value = btn.dataset.val; syncRange(); autoCalc(); });
   });
 
-  function getReaction(pct, target) {
-    const diff = pct - target;
-    if (pct === 0) return { e:'💀', m:"Bro, have you even seen the college gate? The security guard thinks you're a legend from 2019." };
-    if (diff < -20)  return { e:'😭', m:"You're so far below 75%, the attendance register has stopped saving your seat." };
-    if (diff < -10)  return { e:'😰', m:"The HOD is already writing your name on a sticky note. Not the good kind. Not at all." };
-    if (diff < -5)   return { e:'😟', m:"Close to the danger zone. One more bunk and it's a full-blown family meeting at college. 😬" };
-    if (diff < 0)    return { e:'🥵', m:"JUST below target. One lecture stands between you and safety. Wear your ID card and run." };
-    if (diff < 3)    return { e:'😅', m:"You're above 75% — barely. Don't celebrate. Don't even breathe wrong. Stay put." };
-    if (diff < 8)    return { e:'🙂', m:"Safe! You have a small bunk budget. Spend wisely. Do NOT waste it on a 9 AM physics lecture." };
-    if (diff < 15)   return { e:'😎', m:"Sigma attendance achieved. You've cracked the PPSU bunk code. Use it responsibly (you won't)." };
-    if (diff < 25)   return { e:'🔥', m:"You could skip a whole week and still pass. Don't. But statistically... you could. 🤫" };
-    return              { e:'🏆', m:"100% attendance?! You either really love college or college is your only escape. Both valid. 🫡" };
-  }
-
+  /* ─── calculate ─── */
   function calculate(scroll) {
     const total    = parseInt(totalEl.value)    || 0;
     const attended = parseInt(attendedEl.value) || 0;
@@ -665,7 +882,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     if (attended > effective) {
       pctDisp.textContent='Err'; emojiOut.textContent='🧐';
-      msgOut.textContent=`You attended more lectures than actually happened (${effective})? Are you a time traveller or just mistyped? 🤔`; return;
+      msgOut.textContent=`You attended more lectures than happened (${effective})? Time traveller or mistyped? 🤔`; return;
     }
 
     const pct = (attended / effective) * 100;
@@ -680,10 +897,10 @@ document.addEventListener('DOMContentLoaded', () => {
       const canBunk = Math.floor((attended / t) - effective);
       if (canBunk > 0) {
         verdictOut.className='verdict good';
-        verdictOut.innerHTML=`🎉 You can bunk <span class="big-num">${canBunk}</span> more lecture(s) and still keep your ${target}% safe. Go live your best life. 😏`;
+        verdictOut.innerHTML=`🎉 You can bunk <span class="big-num">${canBunk}</span> more lecture(s) and still keep ${target}% safe. Go live your best life. 😏`;
       } else {
         verdictOut.className='verdict edge';
-        verdictOut.innerHTML=`⚠️ You're sitting exactly on the ${target}% edge. Zero bunks left. Not one. Not half. Absolutely zero. 😬`;
+        verdictOut.innerHTML=`⚠️ Sitting exactly on the ${target}% edge. Zero bunks left. Not one. Not half. Absolutely zero. 😬`;
       }
     } else {
       const needed = Math.ceil((t * effective - attended) / (1 - t));
